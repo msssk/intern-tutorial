@@ -313,6 +313,6 @@ In this case, instead of loading suites from our configuration file’s `suites`
 
 When you start testing your actual application, it’s a good idea to use the test runner in conjunction with a continuous integration service like Travis CI or Jenkins so you know that the code in your repository is passing its tests at all times, and so you can monitor your code coverage figures. Instructions are available for using Intern with both [Travis CI](https://github.com/theintern/intern/wiki/Travis-CI-integration) and [Jenkins](https://hellinterface.wordpress.com/javascript/theintern/theintern-and-jenkins-integration-part1/).
 
-If you’d like a complete working copy of this project with Intern already configured and the tests already written, [download the completed-tutorial branch](https://github.com/theintern/intern-tutorial/archive/completed-tutorial-1.2.0.zip). If you have any questions, please [let us know](https://github.com/theintern/intern/wiki/Support). [Pull requests to enhance this tutorial](https://github.com/theintern/intern-tutorial/compare/) are also accepted.
+If you’d like a complete working copy of this project with Intern already configured and the tests already written, [download the completed-tutorial branch](https://github.com/theintern/intern-tutorial/archive/completed-tutorial.zip). If you have any questions, please [let us know](https://github.com/theintern/intern/wiki/Support). [Pull requests to enhance this tutorial](https://github.com/theintern/intern-tutorial/compare/) are also accepted.
 
 Happy testing!
