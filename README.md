@@ -303,7 +303,7 @@ In addition to test results, the runner also provides information on how much of
 
 Whenever you need to run a full test against all platforms, use the test runner. When you are in the process of writing your tests and want to check them for correctness more quickly, you can either use just the client (for unit tests only) or create an alternate configuration file that only tests against a single local platform, like [PhantomJS](https://github.com/theintern/intern/wiki/Using-Intern-with-PhantomJS) (for all tests, including functional tests).
 
-If you are in the process of writing tests, don’t want to create an entirely new configuration file, but just want to load a certain test module, you can [specify it on the command-line](https://github.com/theintern/intern/wiki/Running-Tests):
+If you are in the process of writing tests, don’t want to create an entirely new configuration file, but just want to load a certain test module, you can [specify it on the command-line](https://github.com/theintern/intern/wiki/Running-Intern#as-a-stand-alone-nodejs-client):
 
 ```bash
 ./node_modules/.bin/intern-client config=tests/intern suites=tests/hello
