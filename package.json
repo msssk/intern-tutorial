@@ -1,6 +1,6 @@
 {
 	"name": "intern-tutorial",
-	"version": "1.2.0",
+	"version": "1.6.2",
 	"description": "Intern tutorial. Learn how to use Intern by following this tutorial!",
 	"repository": {
 		"type": "git",
@@ -15,6 +15,6 @@
 	"bugs": "https://github.com/theintern/intern-tutorial/issues",
 	"homepage": "http://theintern.io/",
 	"devDependencies": {
-		"intern": "~1.2.0"
+		"intern": "~1.6.0"
 	}
 }

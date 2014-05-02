@@ -17,7 +17,7 @@ The application itself consists of a basic HTML page and a single “app” pack
 
 ## What can Intern test?
 
-Intern supports two types of tests: unit tests and functional tests. **Unit tests** work by executing code directly and inspecting the result, such as calling a function and then checking that it returns an expected value. **Functional tests** mimic user interaction and work by issuing commands to browsers via a WebDriver browser extension. As such, they require an external server that sends these commands to the browser and processes the result. This is a powerful notion: Intern allows us to test *code* with regular unit tests, but also allows us to test *functionality* by mimicking user interaction within real browsers.
+Intern supports two types of tests: unit tests and functional tests. **Unit tests** work by executing code directly and inspecting the result, such as calling a function and then checking that it returns an expected value. **Functional tests** mimic user interaction and work by issuing commands to browsers via a WebDriver implementation. As such, they require an external server that sends these commands to the browser and processes the result. This is a powerful notion: Intern allows us to test *code* with regular unit tests, but also allows us to test *functionality* by mimicking user interaction within real browsers.
 
 ## Step 1: Download Intern
 
@@ -32,7 +32,7 @@ That’s it! Installation is complete.
 
 ## Step 2: Configuring Intern
 
-Intern needs to be configured so it can find our tests and know how we want to run them. This is done by creating an Intern configuration file, but first we need to create a place for it to live. There are [a few valid conventions](https://github.com/theintern/intern/wiki/Directory-Structure-Examples) that can be used; for this tutorial, we’ll place the configuration file and tests within a `tests` subdirectory of the project, so create one at `intern-tutorial/tests`:
+Intern needs to be configured so it can find our tests and know how we want to run them. This is done by creating an Intern configuration file, but first we need to create a place for it to live. For this tutorial, we’ll place the configuration file and tests within a `tests` subdirectory of the project, so create one at `intern-tutorial/tests`:
 
 ```bash
 mkdir tests
@@ -57,11 +57,13 @@ This example configuration provides us with some default settings that work well
 
 *Note: The `loader` object in the configuration file accepts any configuration options that are understood by the AMD loader. If you need to include additional packages, map modules, etc., this is the place to do it.*
 
-We’ll be doing a little more configuration shortly when we start adding tests, but for now, we have a complete configuration. You can verify that everything is working by running the Node.js client:
+We’ll be doing a little more configuration shortly when we start adding tests, but for now, we have a complete configuration. You can verify that everything is working by running the Node.js client, passing the ID of the configuration module we just created (which is relative to the current working directory) as `config`:
 
 ```bash
-node node_modules/intern/client.js config=tests/intern
+./node_modules/.bin/intern-client config=tests/intern
 ```
+
+*Note: If you install Intern globally and your `PATH` is configured properly, you can simply run `intern-client` instead.*
 
 It should output:
 
@@ -74,14 +76,14 @@ Now that we’ve configured Intern, we need to create a test module which will c
 
 ## Step 3: Write a unit test
 
-There are several different popular syntaxes for writing unit tests, and Intern comes with built-in support for the three most common: [BDD](https://github.com/theintern/intern/wiki/Writing-Tests#bdd), [TDD](https://github.com/theintern/intern/wiki/Writing-Tests#tdd), and [object](https://github.com/theintern/intern/wiki/Writing-Tests#object). In this tutorial, we will use the **object** syntax, but this is an individual preference. All of these interfaces support the same functionality, so pick whichever one you think is the clearest when you start writing your own tests!
+There are several different popular syntaxes for writing unit tests, and Intern comes with built-in support for the three most common: [BDD](https://github.com/theintern/intern/wiki/Writing-Tests-with-Intern#bdd), [TDD](https://github.com/theintern/intern/wiki/Writing-Tests-with-Intern#tdd), and [object](https://github.com/theintern/intern/wiki/Writing-Tests-with-Intern#object). In this tutorial, we will use the **object** syntax, but this is an individual preference. All of these interfaces support the same functionality, so pick whichever one you think is the clearest when you start writing your own tests!
 
 Before getting any further into writing tests, we need to take a moment to review the terminology that is used by Intern:
 
 * An **assertion** is a function call that verifies that a variable contains (or a function returns) an expected, correct, value (e.g. `assert.isTrue(someVariable, 'someVariable should be true')`)
 * A **test interface** is a programming interface for registering tests with Intern
 * A **test case** (or, just **test**) is a function that makes calls to application code and makes assertions about what it should have done
-* A **test suite** is a collection of tests (and, optionally, sub–test-suites) that are related to each other
+* A **test suite** is a collection of tests (and, optionally, sub-test-suites) that are related to each other
 * A **test module** is a JavaScript module in AMD format that contains test suites
 
 These pieces can be visualized in a hierarchy, like this:
@@ -145,7 +147,7 @@ In this test module, we’ve registered a new suite for our `hello` module and n
 
 Each of our assertions also contains a message that describes what logic the assertion is actually checking. Similar to good code comments that describe *why* a piece of code exists, these messages are used to describe the intent of the code being checked rather than simply describing the assertion. For instance, “Calling hello.greet('Murray') should return "Hello, Murray!"” would be a bad assertion message because it just describes what the assertion is doing, rather than describing the desired outcome. With the message we’ve used in the code above, if the `hello.greet` method were changed in the future to return `"Hi, <name>!"` instead, it would be clear that the test itself needed to be updated because the code still fulfils the described business logic. Similarly, if the method were changed to return `"You suck, <name>!"` instead, it would then be clear that the application code was updated incorrectly.
 
-The final step when writing a new test module is to add the [module’s identifier](https://github.com/amdjs/amdjs-api/wiki/AMD#id-) to our configuration file so that it is loaded when we run Intern. To do this, in the `suites` array, add the string `'tests/hello'`:
+The final step when writing a new test module is to add the [module’s identifier](https://github.com/amdjs/amdjs-api/wiki/AMD#module-id-format-) to our configuration file so that it is loaded when we run Intern. To do this, in the `suites` array, add the string `'tests/hello'`:
 
 ```js
 	// ...
@@ -233,7 +235,7 @@ define([
 });
 ```
 
-*Note: To learn which methods are available on the `remote` object, for now, check the [inline documentation](https://github.com/theintern/intern/blob/1.2.0/lib/wd.js#L79-L681) and the [WD.js list of available methods](https://github.com/admc/wd#supported-methods). Better documentation will be available soon. The interface in Intern includes five extra methods not available in WD.js: a `wait` method, which allows you to wait for a fixed period of time before continuing to the next command; an `end` method, which removes the last element retrieved from the DOM from the current chain’s context (similar to jQuery’s `end` method); and `then`, `otherwise`, and `always` methods which work the same as Promises.*
+*Note: To learn which methods are available on the `remote` object, for now, check the [inline documentation](https://github.com/theintern/intern/blob/1.2.0/lib/wd.js#L79-L681) and the [WD.js API](https://github.com/admc/wd#api). Better documentation will be available soon. The interface in Intern includes five extra methods not available in WD.js: a `wait` method, which allows you to wait for a fixed period of time before continuing to the next command; an `end` method, which removes the last element retrieved from the DOM from the current chain’s context (similar to jQuery’s `end` method); and `then`, `otherwise`, and `always` methods which work the same as Promises.*
 
 In the code above, calling `remote.get` loads the HTML page we want to test into the browser, using the `require.toUrl` function to convert the path `index.html` to a fully qualified URL. Then, we wait for the “loaded” CSS class to appear on the body, for a maximum of five seconds. Once this element exists, we go through the process of finding, clicking, and typing into elements. Finally, we retrieve the text from the greeting element and check it to confirm that it matches what was expected.
 
@@ -255,10 +257,12 @@ At this point, all our tests are written and Intern is fully configured. The onl
 Unlike the client, which simply runs tests in whichever environment it is loaded, the test runner is responsible for setting up and executing tests against all the environments specified in our configuration, as well as acting as the server for driving functional tests. It also adds instrumentation to code so that we can analyze how much of our code is actually being executed by our tests. Using the runner works basically the same as running `client.js`, except that since we are using Sauce Labs we also need to provide our Sauce credentials:
 
 ```bash
-SAUCE_USERNAME=<your username> SAUCE_ACCESS_KEY=<your access key> node node_modules/intern/runner.js config=tests/intern
+SAUCE_USERNAME=<your username>
+SAUCE_ACCESS_KEY=<your access key>
+./node_modules/.bin/intern-runner config=tests/intern
 ```
 
-*Note: You may instead specify your Sauce Labs username and access key on the `webdriver` object in your Intern configuration, using the `username` and `accessKey` keys, if you want. However, keep in mind that putting this information in the configuration exposes your username and access key to others.*
+*Note: You may instead specify your Sauce Labs username and access key on the `webdriver` object in your Intern configuration, using the `username` and `accessKey` keys, if you want. However, keep in mind that putting this information in the configuration will expose your username and access key to others if the config file is shared.*
 
 If everything was done correctly, you should see the results of the test run being output to your terminal:
 
@@ -271,7 +275,7 @@ Sauce Connect installed correctly
 Opening local tunnel using Sauce Connect
 Creating tunnel with Sauce Labs
 Testing tunnel ready
-Initialised firefox 19.0 on LINUX
+Initialised firefox 27.0 on LINUX
 Initialised internet explorer 9 on WINDOWS
 Initialised internet explorer 10 on WINDOWS
 ...
@@ -282,7 +286,7 @@ Branches     : 100% ( 2/2 )
 Functions    : 100% ( 2/2 )
 Lines        : 100% ( 4/4 )
 ================================================================================
-firefox 19.0 on LINUX: 0/3 tests failed
+firefox 27.0 on LINUX: 0/3 tests failed
 8 environments left to test
 ...
 =============================== Coverage summary ===============================
@@ -295,20 +299,20 @@ TOTAL: tested 9 platforms, 0/27 tests failed
 Shutting down
 ```
 
-In addition to test results, the runner also provides information on how much of your application’s code was actually tested. In the case of our demo app, we’re executing 100% of our available application code, which is an outstanding level of coverage. A future tutorial will describe how you can get more detailed information about which parts of your code remain untested by using the `lcov` reporter. For now, you can learn a bit more from the [Using Reporters](https://github.com/theintern/intern/wiki/Using-Reporters) documentation.
+In addition to test results, the runner also provides information on how much of your application’s code was actually tested. In the case of our demo app, we’re executing 100% of our available application code, which is an outstanding level of coverage. A future tutorial will describe how you can get more detailed information about which parts of your code remain untested by using the `lcov` reporter. For now, you can learn a bit more from the [Using Reporters](https://github.com/theintern/intern/wiki/Using-and-Writing-Reporters) documentation.
 
 Whenever you need to run a full test against all platforms, use the test runner. When you are in the process of writing your tests and want to check them for correctness more quickly, you can either use just the client (for unit tests only) or create an alternate configuration file that only tests against a single local platform, like [PhantomJS](https://github.com/theintern/intern/wiki/Using-Intern-with-PhantomJS) (for all tests, including functional tests).
 
-If you are in the process of writing tests, don’t want to create an entirely new configuration file, but just want to load a certain test module, you can [specify it on the command-line](https://github.com/theintern/intern/wiki/Running-Tests):
+If you are in the process of writing tests, don’t want to create an entirely new configuration file, but just want to load a certain test module, you can [specify it on the command-line](https://github.com/theintern/intern/wiki/Running-Intern#as-a-stand-alone-nodejs-client):
 
 ```bash
-node node_modules/intern/client.js config=tests/intern suites=tests/hello
+./node_modules/.bin/intern-client config=tests/intern suites=tests/hello
 ```
 
 In this case, instead of loading suites from our configuration file’s `suites` array, only the `tests/hello` module would be loaded and executed.
 
-When you start testing your actual application, it’s a good idea to use the test runner in conjunction with a continuous integration service like Travis CI or Jenkins so you know that the code in your repository is passing its tests at all times, and so you can monitor your code coverage figures. [Instructions on using Intern with Travis CI](https://github.com/theintern/intern/wiki/Travis-CI-integration) are available; instructions for Jenkins will be available shortly, but it is as simple as adding the `runner.js` command as a task.
+When you start testing your actual application, it’s a good idea to use the test runner in conjunction with a continuous integration service like Travis CI or Jenkins so you know that the code in your repository is passing its tests at all times, and so you can monitor your code coverage figures. Instructions are available for using Intern with both [Travis CI](https://github.com/theintern/intern/wiki/Travis-CI-integration) and [Jenkins](https://hellinterface.wordpress.com/javascript/theintern/theintern-and-jenkins-integration-part1/).
 
-If you’d like a complete working copy of this project with Intern already configured and the tests already written, [download the completed-tutorial branch](https://github.com/theintern/intern-tutorial/archive/completed-tutorial-1.2.0.zip). If you have any questions, please [let us know](https://github.com/theintern/intern/wiki/Support). [Pull requests to enhance this tutorial](https://github.com/theintern/intern-tutorial/compare/) are also accepted.
+If you’d like a complete working copy of this project with Intern already configured and the tests already written, [download the completed-tutorial branch](https://github.com/theintern/intern-tutorial/archive/completed-tutorial.zip). If you have any questions, please [let us know](https://github.com/theintern/intern/wiki/Support). [Pull requests to enhance this tutorial](https://github.com/theintern/intern-tutorial/compare/) are also accepted.
 
 Happy testing!
