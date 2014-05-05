@@ -83,7 +83,7 @@ Before getting any further into writing tests, we need to take a moment to revie
 * An **assertion** is a function call that verifies that a variable contains (or a function returns) an expected, correct, value (e.g. `assert.isTrue(someVariable, 'someVariable should be true')`)
 * A **test interface** is a programming interface for registering tests with Intern
 * A **test case** (or, just **test**) is a function that makes calls to application code and makes assertions about what it should have done
-* A **test suite** is a collection of tests (and, optionally, sub-test-suites) that are related to each other
+* A **test suite** is a collection of tests (and, optionally, sub–test-suites) that are related to each other
 * A **test module** is a JavaScript module in AMD format that contains test suites
 
 These pieces can be visualized in a hierarchy, like this:
@@ -257,9 +257,7 @@ At this point, all our tests are written and Intern is fully configured. The onl
 Unlike the client, which simply runs tests in whichever environment it is loaded, the test runner is responsible for setting up and executing tests against all the environments specified in our configuration, as well as acting as the server for driving functional tests. It also adds instrumentation to code so that we can analyze how much of our code is actually being executed by our tests. Using the runner works basically the same as running `client.js`, except that since we are using Sauce Labs we also need to provide our Sauce credentials:
 
 ```bash
-SAUCE_USERNAME=<your username>
-SAUCE_ACCESS_KEY=<your access key>
-./node_modules/.bin/intern-runner config=tests/intern
+SAUCE_USERNAME=<your username> SAUCE_ACCESS_KEY=<your access key> ./node_modules/.bin/intern-runner config=tests/intern
 ```
 
 *Note: You may instead specify your Sauce Labs username and access key on the `webdriver` object in your Intern configuration, using the `username` and `accessKey` keys, if you want. However, keep in mind that putting this information in the configuration will expose your username and access key to others if the config file is shared.*
@@ -275,7 +273,7 @@ Sauce Connect installed correctly
 Opening local tunnel using Sauce Connect
 Creating tunnel with Sauce Labs
 Testing tunnel ready
-Initialised firefox 27.0 on LINUX
+Initialised firefox 28.0 on LINUX
 Initialised internet explorer 9 on WINDOWS
 Initialised internet explorer 10 on WINDOWS
 ...
@@ -286,7 +284,7 @@ Branches     : 100% ( 2/2 )
 Functions    : 100% ( 2/2 )
 Lines        : 100% ( 4/4 )
 ================================================================================
-firefox 27.0 on LINUX: 0/3 tests failed
+firefox 28.0 on LINUX: 0/3 tests failed
 8 environments left to test
 ...
 =============================== Coverage summary ===============================
