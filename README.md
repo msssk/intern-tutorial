@@ -83,7 +83,7 @@ Before getting any further into writing tests, we need to take a moment to revie
 * An **assertion** is a function call that verifies that a variable contains (or a function returns) an expected, correct, value (e.g. `assert.isTrue(someVariable, 'someVariable should be true')`)
 * A **test interface** is a programming interface for registering tests with Intern
 * A **test case** (or, just **test**) is a function that makes calls to application code and makes assertions about what it should have done
-* A **test suite** is a collection of tests (and, optionally, sub-test-suites) that are related to each other
+* A **test suite** is a collection of tests (and, optionally, sub–test-suites) that are related to each other
 * A **test module** is a JavaScript module in AMD format that contains test suites
 
 These pieces can be visualized in a hierarchy, like this:
@@ -235,7 +235,7 @@ define([
 });
 ```
 
-*Note: To learn which methods are available on the `remote` object, for now, check the [inline documentation](https://github.com/theintern/intern/blob/1.2.0/lib/wd.js#L79-L681) and the [WD.js API](https://github.com/admc/wd#api). Better documentation will be available soon. The interface in Intern includes five extra methods not available in WD.js: a `wait` method, which allows you to wait for a fixed period of time before continuing to the next command; an `end` method, which removes the last element retrieved from the DOM from the current chain’s context (similar to jQuery’s `end` method); and `then`, `otherwise`, and `always` methods which work the same as Promises.*
+*Note: To learn which methods are available on the `remote` object, for now, check the [inline documentation](https://github.com/theintern/intern/blob/1.7.0/lib/wd.js#L79-L681) and the [WD.js API](https://github.com/admc/wd#api). Better documentation will be available soon. The interface in Intern includes five extra methods not available in WD.js: a `wait` method, which allows you to wait for a fixed period of time before continuing to the next command; an `end` method, which removes the last element retrieved from the DOM from the current chain’s context (similar to jQuery’s `end` method); and `then`, `otherwise`, and `always` methods which work the same as Promises.*
 
 In the code above, calling `remote.get` loads the HTML page we want to test into the browser, using the `require.toUrl` function to convert the path `index.html` to a fully qualified URL. Then, we wait for the “loaded” CSS class to appear on the body, for a maximum of five seconds. Once this element exists, we go through the process of finding, clicking, and typing into elements. Finally, we retrieve the text from the greeting element and check it to confirm that it matches what was expected.
 
@@ -257,9 +257,7 @@ At this point, all our tests are written and Intern is fully configured. The onl
 Unlike the client, which simply runs tests in whichever environment it is loaded, the test runner is responsible for setting up and executing tests against all the environments specified in our configuration, as well as acting as the server for driving functional tests. It also adds instrumentation to code so that we can analyze how much of our code is actually being executed by our tests. Using the runner works basically the same as running `client.js`, except that since we are using Sauce Labs we also need to provide our Sauce credentials:
 
 ```bash
-SAUCE_USERNAME=<your username>
-SAUCE_ACCESS_KEY=<your access key>
-./node_modules/.bin/intern-runner config=tests/intern
+SAUCE_USERNAME=<your username> SAUCE_ACCESS_KEY=<your access key> ./node_modules/.bin/intern-runner config=tests/intern
 ```
 
 *Note: You may instead specify your Sauce Labs username and access key on the `webdriver` object in your Intern configuration, using the `username` and `accessKey` keys, if you want. However, keep in mind that putting this information in the configuration will expose your username and access key to others if the config file is shared.*
@@ -275,7 +273,7 @@ Sauce Connect installed correctly
 Opening local tunnel using Sauce Connect
 Creating tunnel with Sauce Labs
 Testing tunnel ready
-Initialised firefox 27.0 on LINUX
+Initialised firefox 28.0 on LINUX
 Initialised internet explorer 9 on WINDOWS
 Initialised internet explorer 10 on WINDOWS
 ...
@@ -286,7 +284,7 @@ Branches     : 100% ( 2/2 )
 Functions    : 100% ( 2/2 )
 Lines        : 100% ( 4/4 )
 ================================================================================
-firefox 27.0 on LINUX: 0/3 tests failed
+firefox 28.0 on LINUX: 0/3 tests failed
 8 environments left to test
 ...
 =============================== Coverage summary ===============================
